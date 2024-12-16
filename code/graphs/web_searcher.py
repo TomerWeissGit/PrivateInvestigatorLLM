@@ -1,14 +1,20 @@
-from langgraph.constants import START, END
-from langchain_core.messages import get_buffer_string
 from langchain_core.messages import SystemMessage
+from langchain_core.messages import get_buffer_string
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.constants import START, END
 from langgraph.graph import StateGraph
-from code.graphs.instructions import pi_instructions
+
 from code.env_setting import llm, tavily_search
+from code.instructions.instructions import web_searcher_instructions
 from code.states.states import PrivateInvestigatorState
 
+
 def search_web(state: PrivateInvestigatorState):
-    """ Retrieve docs from web search """
+    """
+     Retrieve docs from web search using the pre-defined Tavily search tool
+    :param state: a state containing 'search_query' which is the query to search for.
+    :return: a formatted search docs in a list, which appends to the state context.
+    """
 
     # Search
     query = state['search_query']
@@ -26,14 +32,18 @@ def search_web(state: PrivateInvestigatorState):
 
 
 def generate_finding(state: PrivateInvestigatorState):
-    """ Node to see if the sentence is in any of Tavily search results """
+    """
+    Node to see if the sentence is in any of Tavily search results
+    :param state: The privateInvestigatorState which contains messages, context and search_query.
+    :return: the PI answer, in a list, which appends to the other messages in the state.
+    """
 
     # Get state
     messages = state["messages"]
     context = state["context"]
     query = state["search_query"]
     # Answer question
-    system_message = pi_instructions.format(context=context, query=query)
+    system_message = web_searcher_instructions.format(context=context, query=query)
     answer = llm.invoke([SystemMessage(content=system_message)] + messages)
 
     # Name the message as coming from the expert
@@ -44,7 +54,12 @@ def generate_finding(state: PrivateInvestigatorState):
 
 
 def save_findings(state: PrivateInvestigatorState):
-    """ Save Findings """
+    """
+    Save findings into state
+    :param state: The privateInvestigatorState which contains findings.
+    :return: a list containing the findings, which appends to other findings found in the state
+    """
+
 
     # Get messages
     messages = state["messages"]
@@ -55,6 +70,7 @@ def save_findings(state: PrivateInvestigatorState):
     # Save to interviews key
     return {"findings": [findings]}
 
+# Building the Graph
 
 # Add nodes and edges
 pi_builder = StateGraph(PrivateInvestigatorState)
@@ -70,4 +86,4 @@ pi_builder.add_edge("save_findings", END)
 
 # Interview
 memory = MemorySaver()
-pi_graph = pi_builder.compile(checkpointer=memory).with_config(run_name="PI run")
+pi_builder.compile(checkpointer=memory).with_config(run_name="PI run")

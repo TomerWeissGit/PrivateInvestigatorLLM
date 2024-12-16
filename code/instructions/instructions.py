@@ -1,4 +1,5 @@
-pi_instructions = """can you find '{query}' in the following context:
+#### web_searcher instructions
+web_searcher_instructions = """can you find '{query}' in the following context:
 {context}
 I am trying to see if someone cheated the test or not
 I am just interested to know if this sentence was copied, so if you find the exact sentence in the context please let me know.

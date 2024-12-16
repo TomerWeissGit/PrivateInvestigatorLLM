@@ -1,4 +1,3 @@
-from IPython.display import Markdown
 from code.graphs.pi_team_leader import graph
 
 if __name__ == "__main__":

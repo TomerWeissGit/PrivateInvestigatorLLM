@@ -1,12 +1,15 @@
-from langgraph.checkpoint.memory import MemorySaver
-from langgraph.constants import Send
 from langchain_core.messages import HumanMessage, SystemMessage
-from code.graphs.instructions import text_splitter_instructions, report_writer_instructions, conclusion_instructions
-from code.env_setting import llm
-from code.states.states import ResearchGraphState
-from code.graphs.web_searcher import pi_builder
-from langgraph.graph import StateGraph
+from langgraph.checkpoint.memory import MemorySaver
 from langgraph.constants import START, END
+from langgraph.constants import Send
+from langgraph.graph import StateGraph
+
+from code.env_setting import llm
+from code.graphs.web_searcher import pi_builder
+from code.instructions.instructions import text_splitter_instructions, report_writer_instructions, \
+    conclusion_instructions
+from code.states.states import ResearchGraphState
+
 
 def split_to_queries(state: ResearchGraphState):
     text = state['source_text']

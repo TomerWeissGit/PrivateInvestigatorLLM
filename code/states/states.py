@@ -1,6 +1,8 @@
-from langgraph.graph import MessagesState
 import operator
 from typing import Annotated, TypedDict, List
+
+from langgraph.graph import MessagesState
+
 
 # web searcher state
 class PrivateInvestigatorState(MessagesState):

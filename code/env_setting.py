@@ -1,6 +1,13 @@
-import os, getpass
-from langchain_openai import ChatOpenAI
+import getpass
+import os
+
+from dotenv import load_dotenv
 from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain_openai import ChatOpenAI
+
+load_dotenv()
+
+# setting up the environment variables if they are not set already
 def _set_env(var: str):
     if not os.environ.get(var):
         os.environ[var] = getpass.getpass(f"{var}: ")
