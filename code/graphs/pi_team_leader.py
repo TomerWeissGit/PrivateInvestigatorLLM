@@ -24,7 +24,7 @@ class TeamLeaderGraph:
 
         # Add nodes to the graph
         self.builder.add_node("split_to_queries", self.split_to_queries)
-        self.builder.add_node("search_cheaters", WebSearcherGraph().graph.compile())
+        self.builder.add_node("search_cheaters", WebSearcherGraph().builder.compile())
         self.builder.add_node("write_report", self.write_report)
         self.builder.add_node("write_conclusion", self.write_conclusion)
         self.builder.add_node("finalize_report", self.finalize_report)
