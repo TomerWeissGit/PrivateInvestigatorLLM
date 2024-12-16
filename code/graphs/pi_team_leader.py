@@ -1,10 +1,10 @@
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.constants import Send
 from langchain_core.messages import HumanMessage, SystemMessage
-from instructions import text_splitter_instructions, report_writer_instructions, conclusion_instructions
+from code.graphs.instructions import text_splitter_instructions, report_writer_instructions, conclusion_instructions
 from code.env_setting import llm
 from code.states.states import ResearchGraphState
-from web_searcher import pi_builder
+from code.graphs.web_searcher import pi_builder
 from langgraph.graph import StateGraph
 from langgraph.constants import START, END
 

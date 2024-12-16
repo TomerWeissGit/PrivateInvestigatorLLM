@@ -3,7 +3,7 @@ from langchain_core.messages import get_buffer_string
 from langchain_core.messages import SystemMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph
-from instructions import pi_instructions
+from code.graphs.instructions import pi_instructions
 from code.env_setting import llm, tavily_search
 from code.states.states import PrivateInvestigatorState
 
