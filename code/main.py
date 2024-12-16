@@ -1,4 +1,4 @@
-from code.graphs.pi_team_leader import graph
+from code.graphs.pi_team_leader import TeamLeaderGraph
 
 if __name__ == "__main__":
     # Inputs
@@ -13,6 +13,7 @@ if __name__ == "__main__":
     thread = {"configurable": {"thread_id": "1"}}
 
     # Run the graph with the example text
+    graph = TeamLeaderGraph().graph
     for event in graph.stream({"source_text": source_text},
                               thread,
                               stream_mode="updates"):
