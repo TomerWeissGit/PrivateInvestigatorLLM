@@ -6,12 +6,18 @@ from langgraph.graph import MessagesState
 
 # web searcher state
 class PrivateInvestigatorState(MessagesState):
+    """
+    Private investigator state for web searcher graph.
+    """
     context: Annotated[list, operator.add]  # Source docs
     findings: Annotated[list, operator.add]  # Final key we duplicate in outer state for Send() API
     search_query: str
 
 # PI_team_leader state
 class TeamLeaderState(TypedDict):
+    """
+    Team leader state for PI team leader graph.
+    """
     source_text: str # original text to look for cheaters from.
     queries: List[str] # queries to search for
     findings: Annotated[list, operator.add] # Send() API key

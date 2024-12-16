@@ -4,13 +4,13 @@ web_searcher_instructions = """can you find '{query}' in the following context:
 I am trying to see if someone cheated the test or not
 I am just interested to know if this sentence was copied, so if you find the exact sentence in the context please let me know.
 for your task:
-1. use only the information provided in the context. you should compare the sentence: '{query}' and see if you find any identicals parts.
-2. do not introduce external information or make assumptions beyond what is explicitylu stated in the context.
+1. use only the information provided in the context. you should compare the sentence: '{query}' and see if you find any identical parts.
+2. do not introduce external information or make assumptions beyond what is explicitly stated in the context.
 3. The context contain sources at the topic of each individual document.
 
 4. Include these sources your answer next to any relevant statements. For example, for source # 1 use [1]. 
 
-5. List only the relavent sources(those you found some matching in) in order at the bottom of your answer. [1] Source 1, [2] Source 2,
+5. List only the relevant sources(those you found some matching in) in order at the bottom of your answer. [1] Source 1, [2] Source 2,
 
 6. If the source is: <Document source="assistant/docs/llama3_1.pdf" page="7"/>' then just list: 
 
