@@ -8,10 +8,16 @@ from code.env_setting import llm
 from code.graphs.web_searcher import pi_builder
 from code.instructions.instructions import text_splitter_instructions, report_writer_instructions, \
     conclusion_instructions
-from code.states.states import ResearchGraphState
+from code.states.states import TeamLeaderState
 
 
-def split_to_queries(state: ResearchGraphState):
+def split_to_queries(state: TeamLeaderState):
+    """
+    Split the source text into sub-queries by splitting into different sentences.
+    It uses the text splitter instructions in order to split the text in a pre-defined way.
+    :param state: a ResearchGraphState object containing the source text
+    :return: a list of queries
+    """
     text = state['source_text']
     system_message = text_splitter_instructions.format(text=text)
     split_sentences = llm.invoke([SystemMessage(content=system_message)] + [
@@ -19,16 +25,24 @@ def split_to_queries(state: ResearchGraphState):
     return {'queries': split_sentences.content.split('split_here')}
 
 
-def map_search(state: ResearchGraphState):
-    """ This is the "map" step where we run each interview sub-graph using Send API """
+def map_search(state: TeamLeaderState):
+    """
+    Map the search queries to the search_cheaters node, which will run the search for each query.
+    This is the "map" step where we run each interview sub-graph using Send API which uses parallelization.
+    :param state: a ResearchGraphState object containing the queries.
+    :return: a list of Send objects to run the search_cheaters node for each query."""
 
     return [Send("search_cheaters", {"search_query": query, "messages": [HumanMessage(content=f"")]}) for query in
             state["queries"]]
 
 
-
-
-def write_report(state: ResearchGraphState):
+def write_report(state: TeamLeaderState):
+    """
+    Write a report based on the findings from the search_cheaters node.
+    The report created is based on the report_writer_instructions and the findings from the search_cheaters node.
+    :param state: a ResearchGraphState object containing the findings.
+    :return: a report content.
+    """
     # Full set of findings
     findings = state["findings"]
 
@@ -42,7 +56,13 @@ def write_report(state: ResearchGraphState):
     return {"content": report.content}
 
 
-def write_conclusion(state: ResearchGraphState):
+def write_conclusion(state: TeamLeaderState):
+    """
+    Write a conclusion based on the findings from the search_cheaters node.
+     The conclusion is based on the conclusion_instructions and the findings from the search_cheaters node.
+    :param state: a ResearchGraphState object containing the findings.
+    :return: a conclusion content.
+    """
     # Full set of findings
     findings = state["findings"]
 
@@ -56,8 +76,12 @@ def write_conclusion(state: ResearchGraphState):
     return {"conclusion": conclusion.content}
 
 
-def finalize_report(state: ResearchGraphState):
-    """ The is the "reduce" step where we gather all the findings, combine them, and reflect on them to write the conclusion """
+def finalize_report(state: TeamLeaderState):
+    """
+    Finalize the report by combining the content and conclusion into a final report.
+    :param state: a ResearchGraphState object containing the content and conclusion.
+    :return: a final report content.
+    """
     # Save full final report
     content = state["content"]
     if content.startswith("## Insights"):
@@ -77,7 +101,7 @@ def finalize_report(state: ResearchGraphState):
 
 
 # Add nodes and edges
-builder = StateGraph(ResearchGraphState)
+builder = StateGraph(TeamLeaderState)
 builder.add_node("split_to_queries", split_to_queries)
 builder.add_node("search_cheaters", pi_builder.compile())
 builder.add_node("write_report", write_report)

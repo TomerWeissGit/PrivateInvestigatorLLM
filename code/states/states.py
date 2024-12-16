@@ -11,7 +11,7 @@ class PrivateInvestigatorState(MessagesState):
     search_query: str
 
 # PI_team_leader state
-class ResearchGraphState(TypedDict):
+class TeamLeaderState(TypedDict):
     source_text: str # original text to look for cheaters from.
     queries: List[str] # queries to search for
     findings: Annotated[list, operator.add] # Send() API key
