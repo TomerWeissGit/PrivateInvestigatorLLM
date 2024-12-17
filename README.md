@@ -83,7 +83,18 @@ right way and to seperate between different smaller tasks.
 ## Sub-Graph - Web Searcher
 The web searcher sub graph contains 3 nodes:
 * "search_web" - a node which uses Tavily and a given query to search on the web, this node is very important because it saves the content of the search which will be examined in the next node-this is our context.
-* "check_if_copied" - this node is our private investigator, it checkes if the given query has a 1:1 match with some of the context given by Tavily.
+* "check_if_copied" - this node is our private investigator, it checkes if the given query has a 1:1 match with some of the context given by Tavily. The PI is instructed to note any links and proofs of the copied files.
 * "save_findings" - this node is only responsible for saving the findings from our privare investigator.
 
 ![graph1](https://github.com/user-attachments/assets/67b4bf75-6ce0-4839-abd9-6ab0f4cc3f43)
+
+## Main-Graph - PI team leader
+The PI team leader graph is also quite simple, it utilizes the web searcher sub-graph in order to search for multiple sentences in parralel, collecting all the findings saved and uses them to generate a crispe report about the paper given.
+The main graph contains the following nodes/parts:
+* "split_to_queries" - takes the text input and split it into sentences (using an LLM for this task), returns a list of the sentences.
+* "map_search" -> "seaerch_cheaters" - this part is a bit more complicated, the list of sentences is given to a function named `map_search` which maps each sentence to the sub-graph. The sub-graph running part is named and labeld as "search_cheaters" because it search for copies in parralel.
+* ["write_conclusion", "write_report"] - those two nodes are i.i.d, one is writing a report using the findings from the search and the other is writing the final verdict, this is the "reduce" step.
+* "finalize_report" - this node is incharge in taking the conclusion and the report and join them into a final report, the report is then presented to the user.
+![graph2](https://github.com/user-attachments/assets/3c33a86d-7b24-41ff-83d2-cc710ef1ccc5)
+
+  
