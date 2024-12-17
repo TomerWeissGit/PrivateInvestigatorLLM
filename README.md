@@ -1,100 +1,99 @@
 # Private Investigator: A Search Tool for Scientific Paper Originality
-A RAG model built using LangChain &amp; Tavily used for finding Copied parts in text
+A Retrieval-Augmented Generation (RAG) model built using **LangChain** and **Tavily Search API** to identify copied parts of text in scientific papers.
 
 ## Introduction
+**Private Investigator** is a powerful tool designed to evaluate the originality of scientific papers. By integrating **LangChain**, **OpenAI's GPT models**, and the **Tavily Search API**, it efficiently retrieves and analyzes relevant data to detect content duplication or ensure originality.
 
-Private Investigator is a powerful tool designed to assess the originality of scientific papers. By leveraging LangChain, OpenAI's GPT models, and the Tavily Search API,
-this tool efficiently retrieves and analyzes relevant data to detect whether a paper contains copied content or demonstrates originality.
+The tool demonstrates advanced concepts such as **multi-agent systems**, **map-reduce workflows**, and **LangGraph** to provide accurate and structured results. Researchers, reviewers, and academics can leverage this tool to enhance scientific integrity by identifying potential duplications and improving transparency in publications.
 
-With Private Investigator, researchers, reviewers, and academics can ensure scientific integrity by identifying potential duplications and enhancing the transparency of scientific publications.
-
-The main idea behind this project is to utilize tavily search while demonstrating how to use concepts such as multi-agent, map-reduce and LangGraph.
 ## Setup
 
-### Python version
-
-To get the most out of this course, please ensure you're using Python 3.11 or later. 
-This version is required for optimal compatibility with LangGraph. If you're on an older version, 
-upgrading will ensure everything runs smoothly.
-
-```
+### Python Version
+Ensure you are using **Python 3.11 or later** for compatibility with LangGraph. To check your current Python version:
+```bash
 python3 --version
 ```
-for mac users make sure you have brew installed and then you can upgrade your python version using the following on your cmd:
-```
+For Mac users, ensure you have `brew` installed, and upgrade Python using:
+```bash
 brew upgrade python3
 ```
 
-### Clone repo
-```
-git clone [https://github.com/TomerWeissGit/PrivateInvestigatorLLM.git]
-$ cd PrivateInvestigatorLLM
+### Clone the Repository
+```bash
+git clone https://github.com/TomerWeissGit/PrivateInvestigatorLLM.git
+cd PrivateInvestigatorLLM
 ```
 
-### Create an environment and install dependencies
+### Create an Environment and Install Dependencies
 #### Mac/Linux/WSL
-```
-$ python3.xy -m venv pi_env
-$ source pi_env/bin/activate
-$ pip install -r requirements.txt
+```bash
+python3.11 -m venv pi_env
+source pi_env/bin/activate
+pip install -r requirements.txt
 ```
 #### Windows Powershell
-```
-PS> python3 -m venv pi_env
-PS> Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
-PS> pi_env\scripts\activate
-PS> pip install -r requirements.txt
-```
-
-### Running notebooks
-If you don't have Jupyter set up, follow installation instructions [here](https://jupyter.org/install).
-```
-$ jupyter notebook
+```powershell
+python3 -m venv pi_env
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+pi_env\scripts\activate
+pip install -r requirements.txt
 ```
 
-### Setting up env variables
-* rename the `.env_example` file in the project folder to `.env`
-* insert the API keys that you created instead of the "xxxxx".
-use a `.env` file with `python-dotenv` library (already in code).
+### Running Notebooks
+If you don’t have Jupyter installed, follow the [official installation guide](https://jupyter.org/install).
+```bash
+jupyter notebook
+```
 
+### Setting Up Environment Variables
+1. Rename the `.env_example` file in the project folder to `.env`.
+2. Replace placeholder values (`xxxxx`) with your API keys.
 
-#### Set OpenAI API key
-* If you don't have an OpenAI API key, you can sign up [here](https://openai.com/index/openai-api/).
-*  Set `OPENAI_API_KEY` in your `.env` file.
+#### Set OpenAI API Key
+- Obtain an OpenAI API key [here](https://openai.com/index/openai-api/).
+- Add the following line to your `.env` file:
+  ```
+  OPENAI_API_KEY=your_openai_api_key
+  ```
 
-#### Sign up and Set LangSmith API
-* Sign up for LangSmith [here](https://smith.langchain.com/), find out more about LangSmith
-* and how to use it within your workflow [here](https://www.langchain.com/langsmith), and relevant library [docs](https://docs.smith.langchain.com/)!
-*  Set `LANGCHAIN_API_KEY`, `LANGCHAIN_TRACING_V2="true"` and `LANGCHAIN_PROJECT="yourprojectname"` in your `.env` file.
+#### Set LangSmith API
+- Sign up for LangSmith [here](https://smith.langchain.com/).
+- Configure your `.env` file:
+  ```
+  LANGCHAIN_API_KEY=your_langsmith_api_key
+  LANGCHAIN_TRACING_V2=true
+  LANGCHAIN_PROJECT=your_project_name
+  ```
 
-#### Set up Tavily API for web search
+#### Set Up Tavily API for Web Search
+- Obtain a Tavily API key [here](https://tavily.com/).
+- Add the following to your `.env` file:
+  ```
+  TAVILY_API_KEY=your_tavily_api_key
+  ```
 
-* Tavily Search API is a search engine optimized for LLMs and RAG, aimed at efficient, 
-quick, and persistent search results. 
-* You can sign up for an API key [here](https://tavily.com/). 
-It's easy to sign up and offers a very generous free tier. 
+## Project Structure
+The **Private Investigator** is built using a **main graph** and a **sub-graph**, demonstrating the power of LangGraph in executing workflows efficiently.
 
-* Set `TAVILY_API_KEY` in your `.env` file.
+### Sub-Graph: Web Searcher
+The **Web Searcher** sub-graph performs three primary tasks:
+1. **`search_web`**: Uses Tavily to search the web with a given query and retrieves contextual content.
+2. **`check_if_copied`**: Analyzes the retrieved content to identify 1:1 matches (potential duplications). The findings include links and proof of copied text.
+3. **`save_findings`**: Saves the results for downstream processing.
 
-# Structure:
-The structure of the PI LangGraph is quite simple and easy to understand, it is build from a main graph which utilizes a Tavily based subgraph in a map-reduce algorithm. Both Graphs operates different agents in order to make sure the task is achived in the 
-right way and to seperate between different smaller tasks.
+![Web Searcher Graph](https://github.com/user-attachments/assets/67b4bf75-6ce0-4839-abd9-6ab0f4cc3f43)
 
-## Sub-Graph - Web Searcher
-The web searcher sub graph contains 3 nodes:
-* "search_web" - a node which uses Tavily and a given query to search on the web, this node is very important because it saves the content of the search which will be examined in the next node-this is our context.
-* "check_if_copied" - this node is our private investigator, it checkes if the given query has a 1:1 match with some of the context given by Tavily. The PI is instructed to note any links and proofs of the copied files.
-* "save_findings" - this node is only responsible for saving the findings from our privare investigator.
+### Main Graph: PI Team Leader
+The **PI Team Leader** graph orchestrates the entire workflow, breaking the problem into smaller tasks and consolidating results. Key components include:
 
-![graph1](https://github.com/user-attachments/assets/67b4bf75-6ce0-4839-abd9-6ab0f4cc3f43)
+1. **`split_to_queries`**: Splits the input text into individual sentences using an LLM.
+2. **`map_search`** -> **`search_cheaters`**: Maps each sentence to the **Web Searcher sub-graph**, executing searches in parallel to identify copied content.
+3. **`write_conclusion`** and **`write_report`**: Generates a concise report and verdict based on findings.
+4. **`finalize_report`**: Merges the report and conclusion into a polished final output presented to the user.
 
-## Main-Graph - PI team leader
-The PI team leader graph is also quite simple, it utilizes the web searcher sub-graph in order to search for multiple sentences in parralel, collecting all the findings saved and uses them to generate a crispe report about the paper given.
-The main graph contains the following nodes/parts:
-* "split_to_queries" - takes the text input and split it into sentences (using an LLM for this task), returns a list of the sentences.
-* "map_search" -> "seaerch_cheaters" - this part is a bit more complicated, the list of sentences is given to a function named `map_search` which maps each sentence to the sub-graph. The sub-graph running part is named and labeld as "search_cheaters" because it search for copies in parralel.
-* ["write_conclusion", "write_report"] - those two nodes are i.i.d, one is writing a report using the findings from the search and the other is writing the final verdict, this is the "reduce" step.
-* "finalize_report" - this node is incharge in taking the conclusion and the report and join them into a final report, the report is then presented to the user.
-![graph2](https://github.com/user-attachments/assets/3c33a86d-7b24-41ff-83d2-cc710ef1ccc5)
+![Main Graph](https://github.com/user-attachments/assets/3c33a86d-7b24-41ff-83d2-cc710ef1ccc5)
 
-  
+## User-Friendly Notebooks
+For a more hands-on experience, a user-friendly notebook is included. It runs the code with clear explanations, visualizations, and less object-oriented structure for easier understanding.
+
+---
