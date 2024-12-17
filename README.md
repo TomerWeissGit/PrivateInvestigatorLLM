@@ -85,4 +85,5 @@ The web searcher sub graph contains 3 nodes:
 * "search_web" - a node which uses Tavily and a given query to search on the web, this node is very important because it saves the content of the search which will be examined in the next node-this is our context.
 * "check_if_copied" - this node is our private investigator, it checkes if the given query has a 1:1 match with some of the context given by Tavily.
 * "save_findings" - this node is only responsible for saving the findings from our privare investigator.
-  ![graph1](https://github.com/user-attachments/assets/67b4bf75-6ce0-4839-abd9-6ab0f4cc3f43)
+
+![graph1](https://github.com/user-attachments/assets/67b4bf75-6ce0-4839-abd9-6ab0f4cc3f43)
