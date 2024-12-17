@@ -33,7 +33,7 @@ pip install -r requirements.txt
 ```
 #### Windows Powershell
 ```powershell
-python3 -m venv pi_env
+python3.xy -m venv pi_env
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 pi_env\scripts\activate
 pip install -r requirements.txt
