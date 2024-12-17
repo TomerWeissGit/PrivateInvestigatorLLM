@@ -27,7 +27,7 @@ cd PrivateInvestigatorLLM
 ### Create an Environment and Install Dependencies
 #### Mac/Linux/WSL
 ```bash
-python3.11 -m venv pi_env
+python3.xy -m venv pi_env
 source pi_env/bin/activate
 pip install -r requirements.txt
 ```
