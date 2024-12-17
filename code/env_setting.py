@@ -15,8 +15,8 @@ def _set_env(var: str):
 _set_env("OPENAI_API_KEY")
 _set_env("TAVILY_API_KEY")
 _set_env("LANGCHAIN_API_KEY")
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_PROJECT"] = "PI"
+_set_env("LANGCHAIN_TRACING_V2")
+_set_env("LANGCHAIN_PROJECT")
 
 llm = ChatOpenAI(model="gpt-4o",temperature=0)
 tavily_search = TavilySearchResults(max_results=3)
